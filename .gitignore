@@ -4,3 +4,20 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Additional ignores
+attached_assets/
+scripts/
+shared/
+.env
+.env.local
+.env.production
+logs/
+*.log
+coverage/
+.nyc_output/
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
