@@ -1,20 +1,36 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { getSudokuPuzzle, cloneBoard, isBoardSolved, getErrorCells } from "@/lib/sudoku";
-import type { SudokuBoard, Difficulty, GameStatus } from "@/lib/types";
+import { getSudokuPuzzle, cloneBoard, isBoardSolved, getErrorCells, getDailySudokuPuzzle, getDailySudokuDifficulty } from "@/lib/sudoku";
+import type { SudokuBoard, Difficulty, GameStatus, ChallengeType } from "@/lib/types";
+import { getTodayDateString } from "@/lib/types";
 
 interface UseSudokuGameOptions {
   onGameStart?: () => void;
+  challengeType?: ChallengeType;
 }
 
 export function useSudokuGame(options?: UseSudokuGameOptions) {
-  const [difficulty, setDifficultyState] = useState<Difficulty>('easy');
-  const [board, setBoard] = useState<SudokuBoard>(() => getSudokuPuzzle('easy'));
+  const challengeType = options?.challengeType ?? 'practice';
+  const today = getTodayDateString();
+  
+  const [difficulty, setDifficultyState] = useState<Difficulty>(() => {
+    if (challengeType === 'daily') {
+      return getDailySudokuDifficulty(today);
+    }
+    return 'easy';
+  });
+  const [board, setBoard] = useState<SudokuBoard>(() => {
+    if (challengeType === 'daily') {
+      return getDailySudokuPuzzle(today);
+    }
+    return getSudokuPuzzle('easy');
+  });
   const [initialBoard, setInitialBoard] = useState<SudokuBoard>(() => cloneBoard(board));
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
   const [errors, setErrors] = useState<Set<string>>(new Set());
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [status, setStatus] = useState<GameStatus>('playing');
   const [hasStarted, setHasStarted] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState(0);
   const timerRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -32,17 +48,26 @@ export function useSudokuGame(options?: UseSudokuGameOptions) {
   }, [status, hasStarted]);
 
   const startNewGame = useCallback(() => {
-    const newBoard = getSudokuPuzzle(difficulty);
-    setBoard(newBoard);
-    setInitialBoard(cloneBoard(newBoard));
+    if (challengeType === 'daily') {
+      const newBoard = getDailySudokuPuzzle(today);
+      setBoard(newBoard);
+      setInitialBoard(cloneBoard(newBoard));
+      setDifficultyState(getDailySudokuDifficulty(today));
+    } else {
+      const newBoard = getSudokuPuzzle(difficulty);
+      setBoard(newBoard);
+      setInitialBoard(cloneBoard(newBoard));
+    }
     setSelectedCell(null);
     setErrors(new Set());
     setTimerSeconds(0);
     setStatus('playing');
     setHasStarted(false);
-  }, [difficulty]);
+    setHintsUsed(0);
+  }, [difficulty, challengeType, today]);
 
   const setDifficulty = useCallback((newDifficulty: Difficulty) => {
+    if (challengeType === 'daily') return;
     setDifficultyState(newDifficulty);
     const newBoard = getSudokuPuzzle(newDifficulty);
     setBoard(newBoard);
@@ -52,8 +77,9 @@ export function useSudokuGame(options?: UseSudokuGameOptions) {
     setTimerSeconds(0);
     setStatus('playing');
     setHasStarted(false);
+    setHintsUsed(0);
     options?.onGameStart?.();
-  }, [options]);
+  }, [options, challengeType]);
 
   const selectCell = useCallback((row: number, col: number) => {
     setSelectedCell({ row, col });
@@ -89,6 +115,7 @@ export function useSudokuGame(options?: UseSudokuGameOptions) {
     setTimerSeconds(0);
     setStatus('playing');
     setHasStarted(false);
+    setHintsUsed(0);
   }, [initialBoard]);
 
   const checkSolution = useCallback(() => {
@@ -114,11 +141,14 @@ export function useSudokuGame(options?: UseSudokuGameOptions) {
     difficulty,
     timerSeconds,
     status,
+    hintsUsed,
+    challengeType,
     setDifficulty,
     startNewGame,
     selectCell,
     updateCell,
     resetBoard,
     checkSolution,
+    setHintsUsed,
   };
 }

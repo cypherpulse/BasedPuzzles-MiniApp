@@ -1,6 +1,7 @@
 export type PuzzleMode = 'sudoku' | 'crossword';
 export type Difficulty = 'easy' | 'medium' | 'hard';
 export type GameStatus = 'playing' | 'solved';
+export type ChallengeType = 'practice' | 'daily';
 
 export interface SudokuCell {
   value: number | null;
@@ -63,6 +64,16 @@ export interface LeaderboardEntry {
   difficulty: Difficulty;
   timeSeconds: number;
   completedAt: number;
+  challengeType?: ChallengeType;
+  assisted?: boolean;
+}
+
+export interface DailyStats {
+  sudokuCompleted: boolean;
+  crosswordCompleted: boolean;
+  sudokuTime?: number;
+  crosswordTime?: number;
+  date: string;
 }
 
 export function getPlayerTitle(stats: PlayerStats): string {
@@ -82,4 +93,19 @@ export function formatTime(seconds: number): string {
 
 export function generateId(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+export function getTodayDateString(): string {
+  const today = new Date();
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+}
+
+export function getDailyPuzzleSeed(date: string): number {
+  let hash = 0;
+  for (let i = 0; i < date.length; i++) {
+    const char = date.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
 }

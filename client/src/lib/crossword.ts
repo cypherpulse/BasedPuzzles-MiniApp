@@ -133,16 +133,41 @@ function buildGrid(puzzle: CrosswordPuzzle): CrosswordCell[][] {
   return grid;
 }
 
-export function getCrosswordPuzzle(difficulty: Difficulty): CrosswordPuzzle {
+export function getCrosswordPuzzle(difficulty: Difficulty, seed?: number): CrosswordPuzzle {
   const puzzles = BASE_PUZZLES.filter(p => p.difficulty === difficulty);
+  const index = seed !== undefined ? seed % puzzles.length : Math.floor(Math.random() * puzzles.length);
   const puzzle = puzzles.length > 0 
-    ? puzzles[Math.floor(Math.random() * puzzles.length)]
+    ? puzzles[index % puzzles.length]
     : BASE_PUZZLES[0];
   
   return {
     ...puzzle,
     grid: buildGrid(puzzle),
   };
+}
+
+export function getDailyCrosswordPuzzle(dateString: string): CrosswordPuzzle {
+  let hash = 0;
+  for (let i = 0; i < dateString.length; i++) {
+    hash = ((hash << 5) - hash) + dateString.charCodeAt(i);
+    hash = hash & hash;
+  }
+  const seed = Math.abs(hash);
+  const puzzle = BASE_PUZZLES[seed % BASE_PUZZLES.length];
+  return {
+    ...puzzle,
+    grid: buildGrid(puzzle),
+  };
+}
+
+export function getDailyCrosswordDifficulty(dateString: string): Difficulty {
+  let hash = 0;
+  for (let i = 0; i < dateString.length; i++) {
+    hash = ((hash << 5) - hash) + dateString.charCodeAt(i);
+    hash = hash & hash;
+  }
+  const seed = Math.abs(hash);
+  return BASE_PUZZLES[seed % BASE_PUZZLES.length].difficulty;
 }
 
 export function isCrosswordSolved(puzzle: CrosswordPuzzle): boolean {

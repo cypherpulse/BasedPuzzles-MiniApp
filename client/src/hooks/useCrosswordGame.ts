@@ -1,14 +1,29 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { getCrosswordPuzzle, clonePuzzle, isCrosswordSolved, getIncorrectCells, findClueForCell } from "@/lib/crossword";
-import type { CrosswordPuzzle, CrosswordClue, Difficulty, GameStatus } from "@/lib/types";
+import { getCrosswordPuzzle, clonePuzzle, isCrosswordSolved, getIncorrectCells, findClueForCell, getDailyCrosswordPuzzle, getDailyCrosswordDifficulty } from "@/lib/crossword";
+import type { CrosswordPuzzle, CrosswordClue, Difficulty, GameStatus, ChallengeType } from "@/lib/types";
+import { getTodayDateString } from "@/lib/types";
 
 interface UseCrosswordGameOptions {
   onGameStart?: () => void;
+  challengeType?: ChallengeType;
 }
 
 export function useCrosswordGame(options?: UseCrosswordGameOptions) {
-  const [difficulty, setDifficultyState] = useState<Difficulty>('easy');
-  const [puzzle, setPuzzle] = useState<CrosswordPuzzle>(() => getCrosswordPuzzle('easy'));
+  const challengeType = options?.challengeType ?? 'practice';
+  const today = getTodayDateString();
+  
+  const [difficulty, setDifficultyState] = useState<Difficulty>(() => {
+    if (challengeType === 'daily') {
+      return getDailyCrosswordDifficulty(today);
+    }
+    return 'easy';
+  });
+  const [puzzle, setPuzzle] = useState<CrosswordPuzzle>(() => {
+    if (challengeType === 'daily') {
+      return getDailyCrosswordPuzzle(today);
+    }
+    return getCrosswordPuzzle('easy');
+  });
   const [initialPuzzle, setInitialPuzzle] = useState<CrosswordPuzzle>(() => clonePuzzle(puzzle));
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
   const [activeClue, setActiveClue] = useState<CrosswordClue | null>(null);
@@ -16,6 +31,7 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [status, setStatus] = useState<GameStatus>('playing');
   const [hasStarted, setHasStarted] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState(0);
   const timerRef = useRef<number | null>(null);
   const currentDirection = useRef<'across' | 'down'>('across');
 
@@ -34,19 +50,28 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
   }, [status, hasStarted]);
 
   const startNewPuzzle = useCallback(() => {
-    const newPuzzle = getCrosswordPuzzle(difficulty);
-    setPuzzle(newPuzzle);
-    setInitialPuzzle(clonePuzzle(newPuzzle));
+    if (challengeType === 'daily') {
+      const newPuzzle = getDailyCrosswordPuzzle(today);
+      setPuzzle(newPuzzle);
+      setInitialPuzzle(clonePuzzle(newPuzzle));
+      setDifficultyState(getDailyCrosswordDifficulty(today));
+    } else {
+      const newPuzzle = getCrosswordPuzzle(difficulty);
+      setPuzzle(newPuzzle);
+      setInitialPuzzle(clonePuzzle(newPuzzle));
+    }
     setSelectedCell(null);
     setActiveClue(null);
     setIncorrectCells(new Set());
     setTimerSeconds(0);
     setStatus('playing');
     setHasStarted(false);
+    setHintsUsed(0);
     currentDirection.current = 'across';
-  }, [difficulty]);
+  }, [difficulty, challengeType, today]);
 
   const setDifficulty = useCallback((newDifficulty: Difficulty) => {
+    if (challengeType === 'daily') return;
     setDifficultyState(newDifficulty);
     const newPuzzle = getCrosswordPuzzle(newDifficulty);
     setPuzzle(newPuzzle);
@@ -57,9 +82,10 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
     setTimerSeconds(0);
     setStatus('playing');
     setHasStarted(false);
+    setHintsUsed(0);
     currentDirection.current = 'across';
     options?.onGameStart?.();
-  }, [options]);
+  }, [options, challengeType]);
 
   const selectCell = useCallback((row: number, col: number) => {
     const cell = puzzle.grid[row][col];
@@ -128,6 +154,7 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
     setTimerSeconds(0);
     setStatus('playing');
     setHasStarted(false);
+    setHintsUsed(0);
     currentDirection.current = 'across';
   }, [initialPuzzle]);
 
@@ -154,6 +181,8 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
     difficulty,
     timerSeconds,
     status,
+    hintsUsed,
+    challengeType,
     setDifficulty,
     startNewPuzzle,
     selectCell,
@@ -161,5 +190,6 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
     setLetter,
     resetPuzzle,
     checkSolution,
+    setHintsUsed,
   };
 }

@@ -86,9 +86,10 @@ function getPuzzlesByDifficulty(difficulty: Difficulty): number[][][] {
   }
 }
 
-export function getSudokuPuzzle(difficulty: Difficulty): SudokuBoard {
+export function getSudokuPuzzle(difficulty: Difficulty, seed?: number): SudokuBoard {
   const puzzles = getPuzzlesByDifficulty(difficulty);
-  const puzzleData = puzzles[Math.floor(Math.random() * puzzles.length)];
+  const index = seed !== undefined ? seed % puzzles.length : Math.floor(Math.random() * puzzles.length);
+  const puzzleData = puzzles[index];
   
   return puzzleData.map((row, rowIndex) =>
     row.map((value, colIndex): SudokuCell => ({
@@ -98,6 +99,28 @@ export function getSudokuPuzzle(difficulty: Difficulty): SudokuBoard {
       readonly: value !== 0,
     }))
   );
+}
+
+export function getDailySudokuPuzzle(dateString: string): SudokuBoard {
+  let hash = 0;
+  for (let i = 0; i < dateString.length; i++) {
+    hash = ((hash << 5) - hash) + dateString.charCodeAt(i);
+    hash = hash & hash;
+  }
+  const seed = Math.abs(hash);
+  const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
+  const difficultyIndex = seed % 3;
+  return getSudokuPuzzle(difficulties[difficultyIndex], seed);
+}
+
+export function getDailySudokuDifficulty(dateString: string): Difficulty {
+  let hash = 0;
+  for (let i = 0; i < dateString.length; i++) {
+    hash = ((hash << 5) - hash) + dateString.charCodeAt(i);
+    hash = hash & hash;
+  }
+  const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
+  return difficulties[Math.abs(hash) % 3];
 }
 
 export function isRowValid(board: SudokuBoard, rowIndex: number): boolean {

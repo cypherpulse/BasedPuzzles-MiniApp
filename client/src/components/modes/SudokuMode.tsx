@@ -19,6 +19,7 @@ interface SudokuModeProps {
   onNewGame: () => void;
   onReset: () => void;
   onCheck: () => void;
+  isDaily?: boolean;
 }
 
 export function SudokuMode({
@@ -34,6 +35,7 @@ export function SudokuMode({
   onNewGame,
   onReset,
   onCheck,
+  isDaily = false,
 }: SudokuModeProps) {
   const isSolved = status === 'solved';
   const canClearCell = selectedCell && !board[selectedCell.row][selectedCell.col].readonly && board[selectedCell.row][selectedCell.col].value !== null;
@@ -53,11 +55,17 @@ export function SudokuMode({
   return (
     <div className="space-y-6" data-testid="sudoku-mode">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <DifficultySelector
-          difficulty={difficulty}
-          onChange={onDifficultyChange}
-          disabled={isSolved}
-        />
+        {!isDaily ? (
+          <DifficultySelector
+            difficulty={difficulty}
+            onChange={onDifficultyChange}
+            disabled={isSolved}
+          />
+        ) : (
+          <div className="text-sm text-muted-foreground capitalize">
+            Difficulty: <span className="font-medium text-foreground">{difficulty}</span>
+          </div>
+        )}
         <Timer seconds={timerSeconds} isRunning={!isSolved} />
       </div>
 

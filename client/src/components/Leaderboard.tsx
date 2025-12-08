@@ -1,13 +1,14 @@
-import { Trophy, Clock, Medal } from "lucide-react";
+import { Trophy, Medal, Lightbulb } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatTime, type LeaderboardEntry, type Difficulty, type LeaderboardMode } from "@/lib/types";
+import { formatTime, type LeaderboardEntry, type Difficulty, type LeaderboardMode, type ChallengeType } from "@/lib/types";
 
 interface LeaderboardProps {
   entries: LeaderboardEntry[];
   mode: LeaderboardMode;
   maxEntries?: number;
+  challengeType?: ChallengeType;
 }
 
 function getRankIcon(rank: number) {
@@ -43,9 +44,14 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
             {getRankIcon(index + 1)}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate" data-testid={`text-leaderboard-name-${index}`}>
-              {entry.playerName}
-            </p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-sm font-medium truncate" data-testid={`text-leaderboard-name-${index}`}>
+                {entry.playerName}
+              </p>
+              {entry.assisted && (
+                <Lightbulb className="w-3 h-3 text-yellow-500 shrink-0" title="Used hints" />
+              )}
+            </div>
             <p className="text-xs text-muted-foreground">
               {formatDate(entry.completedAt)}
             </p>
@@ -64,9 +70,10 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
   );
 }
 
-export function Leaderboard({ entries, mode, maxEntries = 10 }: LeaderboardProps) {
+export function Leaderboard({ entries, mode, maxEntries = 10, challengeType = 'practice' }: LeaderboardProps) {
   const modeEntries = entries
     .filter(e => e.mode === mode)
+    .filter(e => (e.challengeType || 'practice') === challengeType)
     .sort((a, b) => a.timeSeconds - b.timeSeconds)
     .slice(0, maxEntries);
 

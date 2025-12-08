@@ -21,6 +21,7 @@ interface CrosswordModeProps {
   onNewPuzzle: () => void;
   onReset: () => void;
   onCheck: () => void;
+  isDaily?: boolean;
 }
 
 export function CrosswordMode({
@@ -38,17 +39,24 @@ export function CrosswordMode({
   onNewPuzzle,
   onReset,
   onCheck,
+  isDaily = false,
 }: CrosswordModeProps) {
   const isSolved = status === 'solved';
 
   return (
     <div className="space-y-6" data-testid="crossword-mode">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <DifficultySelector
-          difficulty={difficulty}
-          onChange={onDifficultyChange}
-          disabled={isSolved}
-        />
+        {!isDaily ? (
+          <DifficultySelector
+            difficulty={difficulty}
+            onChange={onDifficultyChange}
+            disabled={isSolved}
+          />
+        ) : (
+          <div className="text-sm text-muted-foreground capitalize">
+            Difficulty: <span className="font-medium text-foreground">{difficulty}</span>
+          </div>
+        )}
         <Timer seconds={timerSeconds} isRunning={!isSolved} />
       </div>
 
