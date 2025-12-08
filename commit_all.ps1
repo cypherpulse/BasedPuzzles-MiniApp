@@ -1,11 +1,11 @@
-# PowerShell script to commit all untracked files with individual commit messages
+# PowerShell script to commit all changes (added, modified, deleted) with individual commit messages
 # This script commits all changes for the Based Puzzles frontend project on Base Blockchain
 
-# Get all untracked files
-$files = git ls-files --others --exclude-standard
+# Get all changed files (staged, unstaged, untracked)
+$files = git status --porcelain | ForEach-Object { $_.Substring(3) }
 
 # Base message template
-$baseMessage = "Added {0} for Based Puzzles - Base-native web game hub with Sudoku and Crossword puzzles, track best times, climb leaderboards, Base Mini App, Smart Wallet connect for onchain identity and NFT rewards on Base blockchain"
+$baseMessage = "Updated {0} for Based Puzzles - Base-native web game hub with Sudoku and Crossword puzzles, track best times, climb leaderboards, Base Mini App, Smart Wallet connect for onchain identity and NFT rewards on Base blockchain"
 
 foreach ($file in $files) {
     Write-Host "Committing $file..."
