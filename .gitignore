@@ -23,3 +23,5 @@ coverage/
 Thumbs.db
 
 /commit_wallet.ps1
+/commit_all.ps1
+commit_all.ps1
