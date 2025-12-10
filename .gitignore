@@ -21,3 +21,5 @@ coverage/
 *.swp
 *.swo
 Thumbs.db
+
+/commit_wallet.ps1
