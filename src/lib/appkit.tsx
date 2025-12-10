@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 const queryClient = new QueryClient()
 
 // 1. Get projectId from https://dashboard.reown.com
-const projectId = 'b56e18d47c72ab683b10814fe9495694' // This is a public projectId only to use on localhost
+const projectId = import.meta.env.VITE_PROJECT_ID
 
 // 2. Create a metadata object - optional
 const metadata = {
