@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { getCrosswordPuzzle, clonePuzzle, isCrosswordSolved, getIncorrectCells, findClueForCell, getDailyCrosswordPuzzle, getDailyCrosswordDifficulty } from "@/lib/crossword";
+import { getCrosswordPuzzle, clonePuzzle, isCrosswordSolved, getIncorrectCells, findClueForCell, getDailyCrosswordPuzzle, getDailyCrosswordDifficulty, fetchDailyCrossword, verifyCrosswordSolution } from "@/lib/crossword";
 import type { CrosswordPuzzle, CrosswordClue, Difficulty, GameStatus, ChallengeType } from "@/lib/types";
 import { getTodayDateString } from "@/lib/types";
+import { useWalletAddress } from "@/hooks/useWalletAddress";
 
 interface UseCrosswordGameOptions {
   onGameStart?: () => void;
@@ -11,6 +12,7 @@ interface UseCrosswordGameOptions {
 export function useCrosswordGame(options?: UseCrosswordGameOptions) {
   const challengeType = options?.challengeType ?? 'practice';
   const today = getTodayDateString();
+  const { address } = useWalletAddress();
   
   const [difficulty, setDifficultyState] = useState<Difficulty>(() => {
     if (challengeType === 'daily') {
@@ -25,6 +27,7 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
     return getCrosswordPuzzle('easy');
   });
   const [initialPuzzle, setInitialPuzzle] = useState<CrosswordPuzzle>(() => clonePuzzle(puzzle));
+  const [loading, setLoading] = useState(challengeType === 'daily');
   const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
   const [activeClue, setActiveClue] = useState<CrosswordClue | null>(null);
   const [incorrectCells, setIncorrectCells] = useState<Set<string>>(new Set());
@@ -34,6 +37,31 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
   const [hintsUsed, setHintsUsed] = useState(0);
   const timerRef = useRef<number | null>(null);
   const currentDirection = useRef<'across' | 'down'>('across');
+
+  // Load puzzle
+  useEffect(() => {
+    const loadPuzzle = async () => {
+      if (challengeType === 'daily') {
+        try {
+          const fetchedPuzzle = await fetchDailyCrossword(today, address || undefined);
+          setPuzzle(fetchedPuzzle);
+          setInitialPuzzle(clonePuzzle(fetchedPuzzle));
+        } catch (error) {
+          console.error('Failed to load daily crossword:', error);
+          // Fallback to local
+          const localPuzzle = getDailyCrosswordPuzzle(today);
+          setPuzzle(localPuzzle);
+          setInitialPuzzle(clonePuzzle(localPuzzle));
+        }
+      } else {
+        const localPuzzle = getCrosswordPuzzle(difficulty);
+        setPuzzle(localPuzzle);
+        setInitialPuzzle(clonePuzzle(localPuzzle));
+      }
+      setLoading(false);
+    };
+    loadPuzzle();
+  }, [challengeType, today, difficulty, address]);
 
   useEffect(() => {
     if (status === 'playing' && hasStarted) {
@@ -112,7 +140,7 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
   }, [puzzle, selectedCell, hasStarted, options]);
 
   const selectClue = useCallback((clueId: string) => {
-    const clue = puzzle.clues.find(c => c.id === clueId);
+    const clue = puzzle.clues.find((c: CrosswordClue) => c.id === clueId);
     if (!clue) return;
 
     if (!hasStarted) {
@@ -137,7 +165,7 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
       options?.onGameStart?.();
     }
 
-    setPuzzle(prevPuzzle => {
+    setPuzzle((prevPuzzle: CrosswordPuzzle) => {
       const newPuzzle = clonePuzzle(prevPuzzle);
       newPuzzle.grid[row][col].userLetter = letter;
       return newPuzzle;
@@ -173,8 +201,28 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
     return false;
   }, [puzzle]);
 
+  const submitSolution = useCallback(async () => {
+    if (!puzzle || !address || challengeType !== 'daily') return false;
+    
+    try {
+      const solution = puzzle.grid.flat().map((cell: CrosswordCell) => cell.letter || '');
+      const result = await verifyCrosswordSolution(puzzle.id, solution, timerSeconds, address);
+      if (result.valid) {
+        setStatus('solved');
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        return true;
+      }
+    } catch (error) {
+      console.error('Failed to verify solution:', error);
+    }
+    return false;
+  }, [puzzle, address, challengeType, timerSeconds]);
+
   return {
     puzzle,
+    loading,
     selectedCell,
     activeClue,
     incorrectCells,
@@ -190,6 +238,7 @@ export function useCrosswordGame(options?: UseCrosswordGameOptions) {
     setLetter,
     resetPuzzle,
     checkSolution,
+    submitSolution,
     setHintsUsed,
   };
 }
