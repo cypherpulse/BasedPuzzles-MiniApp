@@ -1,0 +1,29 @@
+{
+  "accountAssociation": {
+    "header": "eyJmaWQiOjkxNTIsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwMmVmNzkwRGQ3OTkzQTM1ZkQ4NDdDMDUzRURkQUU5NDBEMDU1NTk2In0",
+    "payload": "eyJkb21haW4iOiJiYXNlZC1wdXp6bGVzLnZlcmNlbC5hcHAifQ",
+    "signature": "MHg..."
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "Based Puzzles",
+    "iconUrl": "https://based-puzzles.vercel.app/logo.png",
+    "homeUrl": "https://based-puzzles.vercel.app",
+    "splashImageUrl": "https://based-puzzles.vercel.app/logo.png",
+    "splashBackgroundColor": "#0000ff",
+    "subtitle": "Brain games on Base",
+    "description": "Challenge yourself with Sudoku and Base-themed Crossword puzzles. Track your stats, compete on leaderboards, and build your streak.",
+    "primaryCategory": "games",
+    "tags": ["games", "puzzle", "base", "sudoku", "crossword"],
+    "heroImageUrl": "https://based-puzzles.vercel.app/preview.png",
+    "tagline": "Play, Solve, Earn",
+    "ogTitle": "Based Puzzles - Brain Games on Base",
+    "ogDescription": "Challenge yourself with Sudoku and Base-themed Crossword puzzles.",
+    "ogImageUrl": "https://based-puzzles.vercel.app/preview.png",
+    "screenshotUrls": [
+      "https://based-puzzles.vercel.app/screenshot1.png",
+      "https://based-puzzles.vercel.app/screenshot2.png",
+      "https://based-puzzles.vercel.app/screenshot3.png"
+    ]
+  }
+}
