@@ -129,7 +129,7 @@ export function CrosswordGrid({
               return (
                 <div
                   key={cellKey}
-                  className="w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-foreground/90 dark:bg-foreground/70"
+                  className="w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 bg-foreground/90 dark:bg-foreground/70"
                   data-testid={`cell-block-${rowIndex}-${colIndex}`}
                 />
               );
@@ -141,10 +141,10 @@ export function CrosswordGrid({
                 onClick={() => !disabled && onCellSelect(rowIndex, colIndex)}
                 disabled={disabled}
                 className={`
-                  w-7 h-7 sm:w-9 sm:h-9 md:w-10 md:h-10
+                  w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10
                   relative
                   flex items-center justify-center
-                  text-sm sm:text-base md:text-lg font-mono font-medium uppercase
+                  text-xs sm:text-sm md:text-base lg:text-lg font-mono font-medium uppercase
                   transition-colors duration-75
                   focus:outline-none
                   ${isSelected 
