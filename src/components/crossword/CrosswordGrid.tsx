@@ -36,6 +36,7 @@ export function CrosswordGrid({
 }: CrosswordGridProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const selectedButtonRef = useRef<HTMLButtonElement | null>(null);
   const activeClueCells = activeClue ? getCellsForClue(puzzle, activeClue) : new Set<string>();
 
   const moveToNextCell = useCallback((row: number, col: number, direction: 'forward' | 'backward') => {
@@ -59,12 +60,23 @@ export function CrosswordGrid({
     }
   }, [activeClue, puzzle, onCellSelect]);
 
-  // Focus input when cell is selected
+  // Focus input when cell is selected and position it
   useEffect(() => {
     if (selectedCell && !disabled) {
       // Small timeout to ensure UI is ready and to handle mobile focus behavior
       const timeoutId = setTimeout(() => {
-        inputRef.current?.focus();
+        if (inputRef.current && selectedButtonRef.current) {
+          const input = inputRef.current;
+          const button = selectedButtonRef.current;
+          
+          // Position input over the selected cell so the browser scrolls to it
+          input.style.top = `${button.offsetTop}px`;
+          input.style.left = `${button.offsetLeft}px`;
+          input.style.width = `${button.offsetWidth}px`;
+          input.style.height = `${button.offsetHeight}px`;
+          
+          input.focus();
+        }
       }, 0);
       return () => clearTimeout(timeoutId);
     }
@@ -177,6 +189,7 @@ export function CrosswordGrid({
             return (
               <button
                 key={cellKey}
+                ref={isSelected ? selectedButtonRef : null}
                 onClick={() => !disabled && onCellSelect(rowIndex, colIndex)}
                 disabled={disabled}
                 className={`
