@@ -1,4 +1,4 @@
-# 🎯 Based Puzzles
+# Based Puzzles
 
 <div align="center">
   <img src="https://img.shields.io/badge/React-19.0.0-blue?style=for-the-badge&logo=react" alt="React" />
@@ -8,32 +8,32 @@
 </div>
 
 <div align="center">
-  <h3>🧩 Challenge Yourself with Base-Themed Puzzles! 🧩</h3>
+  <h3>Challenge Yourself with Base-Themed Puzzles!</h3>
   <p>A modern, responsive puzzle app featuring Sudoku and crypto-themed Crosswords</p>
   <p>Built for the Base ecosystem with sleek design and addictive gameplay</p>
 </div>
 
 ---
 
-## 🚀 Features
+## Features
 
-### 🎮 Game Modes
+### Game Modes
 - **Sudoku**: Classic 9×9 grid with multiple difficulty levels
 - **Crossword**: Base/crypto-themed clues and puzzles
 - **Daily Challenges**: New puzzles every day to keep you coming back
 
-### 🏆 Competitive Elements
+### Competitive Elements
 - **Leaderboards**: Compete with friends and global players
 - **Personal Stats**: Track your progress, streaks, and achievements
 - **Timed Mode**: Race against the clock for extra challenge
 
-### 🎨 User Experience
+### User Experience
 - **Dark/Light Theme**: Automatic theme switching with manual toggle
 - **Responsive Design**: Perfect on desktop, tablet, and mobile
 - **Keyboard Navigation**: Full keyboard support for power users
 - **Local Persistence**: Your progress saves automatically
 
-### 🔧 Technical Highlights
+### Technical Highlights
 - **Modern Stack**: React 19, TypeScript, Tailwind CSS, Vite
 - **Performance**: Optimized with Vite for lightning-fast builds
 - **Accessibility**: ARIA labels and keyboard navigation
@@ -41,7 +41,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: React 19, TypeScript
 - **Styling**: Tailwind CSS with custom design system
@@ -54,7 +54,45 @@
 
 ---
 
-## 📦 Installation
+## Architecture
+
+The application follows a modular architecture designed for scalability and maintainability.
+
+```mermaid
+graph TD
+    A[User Interface] --> B[React App]
+    B --> C[Game Modes]
+    C --> D[Sudoku Mode]
+    C --> E[Crossword Mode]
+    B --> F[Leaderboards & Stats]
+    B --> G[Profile Management]
+    B --> H[Wallet Integration]
+    H --> I[Base Blockchain]
+    D --> J[Sudoku Logic]
+    E --> K[Crossword Logic]
+    F --> L[Data Persistence]
+    G --> M[User Authentication]
+    I --> N[Smart Contracts]
+    N --> O[Transaction Handling]
+    L --> P[Local Storage]
+    L --> Q[Backend API]
+```
+
+### Component Architecture
+- **Components**: Modular UI components organized by feature (sudoku, crossword, ui primitives)
+- **Hooks**: Custom React hooks for game logic, data fetching, and state management
+- **Lib**: Utility functions, game algorithms, and configuration
+- **Pages**: Route-based page components for navigation
+
+### Data Flow
+- User interactions trigger state updates via React hooks
+- Game logic is handled in custom hooks with local state persistence
+- Blockchain integration manages wallet connections and transactions
+- Leaderboards and stats are fetched from backend services
+
+---
+
+## Installation
 
 ### Prerequisites
 - Node.js 18+ and npm/pnpm
@@ -94,7 +132,7 @@ npm run preview
 
 ---
 
-## 🎯 How to Play
+## How to Play
 
 ### Sudoku
 - Click a cell and use your keyboard (1-9) or the number pad
@@ -113,7 +151,7 @@ npm run preview
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 src/
@@ -130,7 +168,7 @@ src/
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Here's how to get started:
 
@@ -148,21 +186,21 @@ We welcome contributions! Here's how to get started:
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- Built with ❤️ for the Base ecosystem
+- Built for the Base ecosystem
 - Inspired by classic puzzle games
 - Thanks to the open-source community
 
 ---
 
 <div align="center">
-  <p>🎉 Happy puzzling! 🎉</p>
-  <p>Made with 💜 on Base</p>
+  <p>Happy puzzling!</p>
+  <p>Made on Base</p>
 </div>
