@@ -33,3 +33,5 @@ commit_all.ps1
 
 commit_miniapp.ps1
 /commit_miniapp.ps1
+
+*.ps1
