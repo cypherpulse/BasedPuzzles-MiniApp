@@ -19,19 +19,8 @@ coverage/
 .vscode/
 .idea/
 *.swp
-*.swoogTitle
-Based Puzzles - Brain Games on Base
-󰅈
-Invalid input
-Open Graph title
-Max 30 characters
+*.swo
 Thumbs.db
 
-/commit_wallet.ps1
-/commit_all.ps1
-commit_all.ps1
-
-commit_miniapp.ps1
-/commit_miniapp.ps1
-
+# Commit scripts
 *.ps1

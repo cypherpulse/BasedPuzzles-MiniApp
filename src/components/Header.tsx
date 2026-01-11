@@ -28,7 +28,14 @@ export function Header({ stats, onProfileClick }: HeaderProps) {
   return (
     <header className="h-16 border-b bg-background px-4 md:px-6 flex items-center justify-between gap-4" data-testid="header">
       <div className="flex items-center gap-3">
-        <img src="/logo.png" alt="Based Puzzles" className="w-12 h-12 rounded-lg" />
+        <img 
+          src="/logo.png" 
+          alt="Based Puzzles" 
+          className="w-12 h-12 rounded-lg" 
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+          }}
+        />
         <div>
           <h1 className="text-xl font-bold tracking-tight" data-testid="text-app-title">Based Puzzles</h1>
           <p className="text-xs text-muted-foreground hidden sm:block">Brain games on Base</p>

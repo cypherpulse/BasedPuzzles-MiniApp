@@ -1,17 +1,20 @@
 # Based Puzzles
 
 <div align="center">
-  <img src="https://img.shields.io/badge/React-19.0.0-blue?style=for-the-badge&logo=react" alt="React" />
-  <img src="https://img.shields.io/badge/TypeScript-5.6.3-blue?style=for-the-badge&logo=typescript" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-3.4.17-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/Vite-6.0.1-646CFF?style=for-the-badge&logo=vite" alt="Vite" />
+  <img src="https://img.shields.io/badge/Base-Blockchain-blue?style=for-the-badge&logo=ethereum" alt="Base Blockchain" />
+  <img src="https://img.shields.io/badge/Puzzles-Game-orange?style=for-the-badge&logo=game" alt="Puzzle Game" />
+  <img src="https://img.shields.io/badge/Web3-Enabled-green?style=for-the-badge&logo=web3" alt="Web3 Enabled" />
+  <img src="https://img.shields.io/badge/Open_Source-Community-purple?style=for-the-badge&logo=github" alt="Open Source" />
 </div>
 
-<div align="center">
-  <h3>Challenge Yourself with Base-Themed Puzzles!</h3>
-  <p>A modern, responsive puzzle app featuring Sudoku and crypto-themed Crosswords</p>
-  <p>Built for the Base ecosystem with sleek design and addictive gameplay</p>
-</div>
+## Live Demo
+
+**Based Puzzles is now live!**  
+🔗 [https://based-puzzles.vercel.app/](https://based-puzzles.vercel.app/)
+
+![Based Puzzles](assets/bpuzzles.png)
+
+The ultimate puzzle gaming experience built on Base blockchain. Challenge yourself with Sudoku and crypto-themed Crosswords, compete on leaderboards, and enjoy seamless Web3 integration. A modern, responsive puzzle app designed for the Base ecosystem with sleek design and addictive gameplay.
 
 ---
 
@@ -38,6 +41,19 @@
 - **Performance**: Optimized with Vite for lightning-fast builds
 - **Accessibility**: ARIA labels and keyboard navigation
 - **Type Safety**: Full TypeScript coverage
+
+---
+
+## Screenshots
+
+### Game Interface
+![Game Interface](./assets/game-interface.png)
+
+### Leaderboard
+![Leaderboard](./assets/leaderboard.png)
+
+### Profile Stats
+![Profile Stats](./assets/profile-stats.png)
 
 ---
 
@@ -92,6 +108,18 @@ graph TD
 
 ---
 
+## Backend Integration
+
+This frontend application integrates with a backend service for persistent data storage and blockchain interactions. For detailed backend integration documentation, see [backend-integration.md](backend-integration.md).
+
+### Key Integration Points
+- **Leaderboard Data**: Fetched from backend API for global rankings
+- **User Statistics**: Stored and retrieved from backend for cross-device sync
+- **Blockchain Transactions**: Handled through wallet integration for rewards and payments
+- **Daily Challenges**: Generated and validated server-side for fairness
+
+---
+
 ## Installation
 
 ### Prerequisites
@@ -129,6 +157,21 @@ graph TD
 npm run build
 npm run preview
 ```
+
+---
+
+## Deployment
+
+The application is configured for deployment on Vercel with the included `vercel.json` configuration. The build output is optimized for static hosting.
+
+### Vercel Deployment
+1. Connect your repository to Vercel
+2. Configure environment variables if needed
+3. Deploy automatically on push to main branch
+
+### Manual Deployment
+- Build the project: `npm run build`
+- Serve the `dist` folder on any static host (Netlify, GitHub Pages, etc.)
 
 ---
 
@@ -170,19 +213,41 @@ src/
 
 ## Contributing
 
-We welcome contributions! Here's how to get started:
+We welcome contributions from the community! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated.
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+### Getting Started
+
+1. **Fork the repository** on GitHub
+2. **Clone your fork** locally: `git clone https://github.com/yourusername/based-puzzles.git`
+3. **Create a feature branch**: `git checkout -b feature/your-feature-name`
+4. **Install dependencies**: `npm install` or `pnpm install`
+5. **Start development**: `npm run dev`
+
+### Development Workflow
+
+1. **Make your changes** following the guidelines below
+2. **Test your changes** thoroughly
+3. **Commit your changes**: `git commit -m 'feat: add your feature description'`
+4. **Push to your branch**: `git push origin feature/your-feature-name`
+5. **Open a Pull Request** with a clear description of your changes
 
 ### Development Guidelines
-- Use TypeScript for all new code
-- Follow the existing code style
-- Add tests for new features
-- Update documentation as needed
+
+- **Code Style**: Follow the existing TypeScript and React patterns
+- **TypeScript**: Use TypeScript for all new code with proper type annotations
+- **Testing**: Add unit tests for new features and ensure existing tests pass
+- **Documentation**: Update README and inline comments as needed
+- **Commits**: Use conventional commit format (feat, fix, docs, style, refactor, test, chore)
+- **Pull Requests**: Provide clear descriptions and link related issues
+
+### Areas for Contribution
+
+- Bug fixes and performance improvements
+- New puzzle types or game modes
+- UI/UX enhancements
+- Accessibility improvements
+- Documentation updates
+- Test coverage expansion
 
 ---
 
@@ -194,13 +259,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- Built for the Base ecosystem
-- Inspired by classic puzzle games
-- Thanks to the open-source community
+This project is built for the Base ecosystem and draws inspiration from classic puzzle games. Special thanks to:
+
+- The Base community for their innovative blockchain platform
+- Open-source contributors to React, TypeScript, and related libraries
+- The puzzle game community for timeless entertainment concepts
 
 ---
 
 <div align="center">
   <p>Happy puzzling!</p>
-  <p>Made on Base</p>
+  <p>Built on Base</p>
 </div>
